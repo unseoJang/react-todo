@@ -14,7 +14,8 @@ function fetchTodos(){
 function App() {
   // const [count, setCount] =  (0)
   const [inputText, setInputText] = useState('')
-  const todos = fetchTodos()
+  // const todos = fetchTodos()
+  const [todos, setTodos] = useState(fetchTodos());
 
   const handleInput = (event) => {
     const {value} = event.target
@@ -23,8 +24,28 @@ function App() {
 
   
   const handleClick = ()=>{
+    console.log('clicked')
     localStorage.setItem(inputText,inputText)
+    
+    // todos.push(inputText)
+    setTodos((currentTodos)=>{
+      return[...currentTodos, inputText]
+    })
+
     setInputText('')
+  }
+
+  const handleRemove =(todo, index)=>{
+    // console.log(todo, index)
+    // todos.splice(index, 1)
+
+    const result = todos.filter(todoITem => {
+      if(todoITem !== todo){
+        return true;
+      }
+    })
+    setTodos(result)
+    localStorage.removeItem(todo)
   }
 
   return (
@@ -40,7 +61,7 @@ function App() {
           {todos.map((todo,index)=>{
             return (
               <li key={index}>{todo}
-                <span>remove</span>
+                <button onClick={()=>handleRemove(todo, index)}>remove</button>
               </li>
             )
           })}
